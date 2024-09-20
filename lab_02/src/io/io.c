@@ -6,8 +6,8 @@
 
 #include "../../include/utils/string_tools.h"
 
-#define MAX_USER_CHOISE_LEN 2
-#define MAX_USER_CHOISE_LEN_WITH_NULL (MAX_USER_CHOISE_LEN + 1)
+#define MAX_USER_choice_LEN 2
+#define MAX_USER_choice_LEN_WITH_NULL (MAX_USER_choice_LEN + 1)
 #define INPUT_OVERFLOW_MSG "Ввод слишком длинный. Попробуйте еще раз\n"
 #define INVALID_INPUT_MSG "Невалидное значение. Попробуйте еще раз\n"
 
@@ -59,13 +59,13 @@ static return_code input_string(const char *prompt, char *string, const size_t m
     return rc;
 }
 
-return_code input_user_choise(const char **user_choise, const char *exit_code, const size_t n_options, ...)
+return_code input_user_choice(const char **user_choice, const char *exit_code, const size_t n_options, ...)
 {
-    // writes NULL to <user_choise> if choise is invalid or io error occured
-    *user_choise = NULL;
-    char user_input[MAX_USER_CHOISE_LEN_WITH_NULL];
+    // writes NULL to <user_choice> if choice is invalid or io error occured
+    *user_choice = NULL;
+    char user_input[MAX_USER_choice_LEN_WITH_NULL];
 
-    return_code rc = input_string("Выбор: ", user_input, MAX_USER_CHOISE_LEN);
+    return_code rc = input_string("Выбор: ", user_input, MAX_USER_choice_LEN);
 
     if (rc == OK && strcmp(user_input, exit_code) == 0)
         rc = DIALOG_EXIT;
@@ -75,12 +75,12 @@ return_code input_user_choise(const char **user_choise, const char *exit_code, c
         va_list args;
         va_start(args, n_options);
 
-        for (size_t i = 0; i < n_options && *user_choise == NULL; ++i)
+        for (size_t i = 0; i < n_options && *user_choice == NULL; ++i)
         {
             const char *option = va_arg(args, const char *);
 
             if (strcmp(user_input, option) == 0)
-                *user_choise = option;
+                *user_choice = option;
         }
 
         va_end(args);

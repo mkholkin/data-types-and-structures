@@ -3,10 +3,11 @@
 #include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
-#include "../../include/string_tools.h"
 #include "../../include/io/io.h"
 #include "../../include/io/validators.h"
+#include "../../include/utils/string_tools.h"
 
 
 return_code input_car_brand(char *str)
@@ -16,37 +17,10 @@ return_code input_car_brand(char *str)
 
 return_code input_car_country(char *str)
 {
-    return input_until_valid("Enter contry: ", str, VARCHAR_LENGTH, validate_country);
+    return input_until_valid("Enter country: ", str, VARCHAR_LENGTH, validate_country);
 }
 
-return_code input_car_foreign(bool *is_foreign)
-{
-    return_code rc;
-    const char *user_choise = NULL;
-    printf("%s", "Is car foreign");
-    do
-    {
-        rc = input_user_choise(&user_choise, "0", 2, "1", "2");
-    }
-    while ((rc == OK || should_retry(rc)) && user_choise == NULL);
-
-    if (rc == OK)
-        switch (*user_choise)
-        {
-            case '1':
-                *is_foreign = true;
-                break;
-            case '2':
-                *is_foreign = false;
-                break;
-            default:
-                assert(0);
-        }
-
-    return rc;
-}
-
-return_code input_car_supprots_maintain(bool *supports_maintain)
+return_code input_car_supports_maintain(bool *supports_maintain)
 {
 }
 
@@ -61,7 +35,7 @@ return_code input_car_price(unsigned long long *price)
     return rc;
 }
 
-return_code input_car_color(car_color *color)
+return_code input_car_color(const char * *color)
 {
 }
 
@@ -71,7 +45,7 @@ return_code input_car_is_new(bool *is_new)
 
 return_code input_year(unsigned *release_year)
 {
-    char buf[];
+    char buf[10];
 
     const return_code rc = input_until_valid("Enter release year: ", buf, 123, validate_year);
     if (rc == OK)
@@ -82,7 +56,7 @@ return_code input_year(unsigned *release_year)
 
 return_code input_car_mileage(size_t *mileage_km)
 {
-    char buf[];
+    char buf[10];
 
     const return_code rc = input_until_valid("Enter mileage: ", buf, 123, validate_mileage);
     if (rc == OK)
@@ -93,7 +67,7 @@ return_code input_car_mileage(size_t *mileage_km)
 
 return_code input_owners_amount(size_t *owners_amount)
 {
-    char buf[];
+    char buf[10];
 
     const return_code rc = input_until_valid("Enter owners amount: ", buf, 123, validate_owners_amount);
     if (rc == OK)
@@ -104,7 +78,7 @@ return_code input_owners_amount(size_t *owners_amount)
 
 return_code input_repairs_amount(size_t *repairs_amount)
 {
-    char buf[];
+    char buf[10];
 
     const return_code rc = input_until_valid("Enter repairs amount: ", buf, 123, validate_repairs_amount);
     if (rc == OK)
@@ -115,7 +89,7 @@ return_code input_repairs_amount(size_t *repairs_amount)
 
 return_code input_car_warranty(unsigned *warranty)
 {
-    char buf[];
+    char buf[10];
 
     const return_code rc = input_until_valid("Enter warranty period (years): ", buf, 123, validate_warranty);
     if (rc == OK)
@@ -153,10 +127,10 @@ return_code input_car(car_t *dst)
         rc = input_car_country(dst->country);
 
     if (rc == OK)
-        rc = input_car_foreign(&dst->is_foreign);
+        dst->is_foreign = strcmp(dst->country, "Russia");
 
     if (rc == OK && dst->is_foreign)
-        rc = input_car_supprots_maintain(&dst->supports_maintain);
+        rc = input_car_supports_maintain(&dst->supports_maintain);
 
     if (rc == OK)
         rc = input_car_price(&dst->price);

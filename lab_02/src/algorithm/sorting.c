@@ -55,7 +55,7 @@ void qsort_cars_by_price(car_t *cars, const size_t n)
     qsort(cars, n, sizeof(car_t), cmp_cars_by_price);
 }
 
-void key_selectsort_cars_by_price(key_price *items, const size_t n)
+void key_tbl_selectsort_cars_by_price(key_price *items, const size_t n)
 {
     qsort(items, n, sizeof(key_price), cmp_key_price);
 }

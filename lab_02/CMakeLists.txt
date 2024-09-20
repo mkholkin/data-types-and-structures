@@ -18,4 +18,8 @@ add_executable(lab_02 main.c
         src/algorithm/sorting.c
         include/algorithm/sorting.h
         src/algorithm/key_table.c
-        include/algorithm/key_table.h)
+        include/algorithm/key_table.h
+        src/process.c
+        include/process.h
+        src/utils/time.c
+        include/utils/time.h)

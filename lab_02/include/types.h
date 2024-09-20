@@ -5,19 +5,6 @@
 
 #define VARCHAR_LENGTH 255
 
-typedef enum
-{
-    black,
-    white,
-    grey,
-    red,
-    green,
-    pink,
-    silver,
-    gold,
-    light_green,
-} car_color;
-
 typedef struct
 {
     unsigned warranty;
@@ -44,7 +31,7 @@ typedef struct
     bool is_foreign;
     bool supports_maintain;
     unsigned long long price;
-    car_color color;
+    const char *color;
     bool is_new;
     car_spec spec;
 } car_t;

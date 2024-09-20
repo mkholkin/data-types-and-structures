@@ -10,11 +10,11 @@ return_code input_car_country(char *str);
 
 return_code input_car_foreign(bool *is_foreign);
 
-return_code input_car_supprots_maintain(bool *supports_maintain);
+return_code input_car_supports_maintain(bool *supports_maintain);
 
 return_code input_car_price(unsigned long long *price);
 
-return_code input_car_color(car_color *color);
+return_code input_car_color(const char * *color);
 
 return_code input_car_is_new(bool *is_new);
 
