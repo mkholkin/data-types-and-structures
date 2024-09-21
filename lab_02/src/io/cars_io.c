@@ -1,23 +1,24 @@
 #include "../../include/io/cars_io.h"
 
-#include <assert.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
+#include "../../include/options.h"
 #include "../../include/io/io.h"
 #include "../../include/io/validators.h"
-#include "../../include/utils/string_tools.h"
 
 
-return_code input_car_brand(char *str)
+return_code input_car_brand(const char **brand)
 {
-    return input_until_valid("Enter brand: ", str, VARCHAR_LENGTH, validate_car_brand);
+    printf("Enter brand:\n");
+    return input_option(brand, BRAND_OPTIONS, N_BRAND_OPTIONS, true);
 }
 
-return_code input_car_country(char *str)
+return_code input_car_country(const char **country)
 {
-    return input_until_valid("Enter country: ", str, VARCHAR_LENGTH, validate_country);
+    printf("Enter country:\n");
+    return input_option(country, COUNTRY_OPTIONS, N_COUNTRY_OPTIONS, true);
 }
 
 return_code input_car_supports_maintain(bool *supports_maintain)
@@ -37,6 +38,7 @@ return_code input_car_price(unsigned long long *price)
 
 return_code input_car_color(const char * *color)
 {
+    return input_option(color, COLOR_OPTIONS, N_COLOR_OPTIONS, true);
 }
 
 return_code input_car_is_new(bool *is_new)
@@ -121,10 +123,10 @@ return_code input_car_spec_secondhand(car_spec_secondhand *dst)
 
 return_code input_car(car_t *dst)
 {
-    return_code rc = input_car_brand(dst->brand);
+    return_code rc = input_car_brand(&dst->brand);
 
     if (rc == OK)
-        rc = input_car_country(dst->country);
+        rc = input_car_country(&dst->country);
 
     if (rc == OK)
         dst->is_foreign = strcmp(dst->country, "Russia");
@@ -142,10 +144,12 @@ return_code input_car(car_t *dst)
         rc = input_car_is_new(&dst->is_new);
 
     if (rc == OK)
+    {
         if (dst->is_new)
             rc = input_car_spec_new(&dst->spec.new);
         else
             rc = input_car_spec_secondhand(&dst->spec.secondhand);
+    }
 
     return rc;
 }

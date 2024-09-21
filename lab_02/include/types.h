@@ -26,8 +26,8 @@ typedef union
 
 typedef struct
 {
-    char brand[VARCHAR_LENGTH + 1];
-    char country[VARCHAR_LENGTH + 1];
+    const char *brand;
+    const char *country;
     bool is_foreign;
     bool supports_maintain;
     unsigned long long price;

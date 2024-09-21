@@ -22,4 +22,8 @@ add_executable(lab_02 main.c
         src/process.c
         include/process.h
         src/utils/time.c
-        include/utils/time.h)
+        include/utils/time.h
+        src/utils/array_tools.c
+        include/utils/array_tools.h
+        src/options.c
+        include/options.h)

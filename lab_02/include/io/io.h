@@ -16,7 +16,7 @@
 /// @param[in] max_len
 /// @param[in] validator
 /// @return Код возврата | Строка введенная пользовтелем, прошедшая валидацию
-return_code input_until_valid(const char *prompt, char *string, size_t max_len, int (*validator)(const char *));
+return_code input_until_valid(const char *prompt, char *string, size_t max_len, bool (*validator)(const char *));
 
 /// @brief Выбор пользовтелем одного из предложенных вариантов, до тех пор пока выбор не будет валидным
 /// @param[out] user_choice
@@ -30,5 +30,7 @@ return_code input_user_choice(const char **user_choice, const char *exit_code, s
 /// @param[in] rc Текущий код возврата (состояние программы)
 /// @return
 int should_retry(const return_code rc);
+
+return_code input_option(const char **user_choice, const char **options, const size_t n_options, const bool retry);
 
 #endif //IO_H

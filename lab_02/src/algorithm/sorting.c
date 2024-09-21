@@ -35,14 +35,14 @@ static void selectsort(void *base, const size_t nmemb, const size_t size, int (*
     }
 }
 
-static int cmp_cars_by_price(const car_t *a, const car_t *b)
+static int cmp_cars_by_price(const void *a, const void *b)
 {
-    return a->price - b->price;
+    return ((car_t *) a)->price - ((car_t *) b)->price;
 }
 
-static int cmp_key_price(const key_price *a, const key_price *b)
+static int cmp_key_price(const void *a, const void *b)
 {
-    return a->price - b->price;
+    return ((key_price *) a)->price - ((key_price *) b)->price;
 }
 
 void selectsort_cars_by_price(car_t *cars, const size_t n)

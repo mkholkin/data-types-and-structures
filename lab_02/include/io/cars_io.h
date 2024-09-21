@@ -4,9 +4,9 @@
 #include "../return_codes.h"
 #include "../types.h"
 
-return_code input_car_brand(char *str);
+return_code input_car_brand(const char **brand);
 
-return_code input_car_country(char *str);
+return_code input_car_country(const char **country);
 
 return_code input_car_foreign(bool *is_foreign);
 

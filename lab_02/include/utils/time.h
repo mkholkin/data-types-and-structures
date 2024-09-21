@@ -3,6 +3,8 @@
 
 #include <time.h>
 
-unsigned long long nanoseconds_now(void);
+typedef unsigned long long nsec_t;
+
+nsec_t nanoseconds_now(void);
 
 #endif //TIME_H
