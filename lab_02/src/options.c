@@ -9,7 +9,8 @@ const char *COLOR_OPTIONS[] = {
     "Pink",
     "Silver",
     "Gold",
-    "Light_green",
+    "Light green",
+    "Yellow",
 };
 const size_t N_COLOR_OPTIONS = sizeof(COLOR_OPTIONS) / sizeof(COLOR_OPTIONS[0]);
 
@@ -21,8 +22,27 @@ const char *BRAND_OPTIONS[] = {
     "Audi",
     "Porche",
     "Lada",
+    "GAZ",
+    "UAZ",
     "Dodge",
-    "Chevrolet"
+    "Chevrolet",
+    "Toyota",
+    "Honda",
+    "Hyundai",
+    "Volkswagen",
+    "Mazda",
+    "Skoda",
+    "Peugeot",
+    "Citroen",
+    "Renault",
+    "Tesla",
+    "Nissan",
+    "Porsche",
+    "Lexus",
+    "Subaru",
+    "Ferrari",
+    "Mitsubishi",
+    "Fiat"
 };
 const size_t N_BRAND_OPTIONS = sizeof(BRAND_OPTIONS) / sizeof(BRAND_OPTIONS[0]);
 
@@ -34,5 +54,9 @@ const char *COUNTRY_OPTIONS[] = {
     "Italy",
     "Poland",
     "China",
+    "Japan",
+    "South Korea",
+    "Czech Republic",
+    "France",
 };
 const size_t N_COUNTRY_OPTIONS = sizeof(COUNTRY_OPTIONS) / sizeof(COUNTRY_OPTIONS[0]);

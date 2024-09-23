@@ -80,7 +80,7 @@ return_code input_option(const char **user_choice, const char **options, const s
 
         for (int i = 0; rc == OK && *user_choice == NULL && i < n_options; ++i)
         {
-            if (strtol(user_input, NULL, 10) == i)
+            if (strtol(user_input, NULL, 10) == i + 1)
                 *user_choice = options[i];
         }
     }

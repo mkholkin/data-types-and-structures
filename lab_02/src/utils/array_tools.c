@@ -2,7 +2,6 @@
 
 #include <stdlib.h>
 #include <string.h>
-#include <time.h>
 
 static void swap(void *a, void *b, const size_t bytes)
 {
@@ -44,6 +43,6 @@ void shuffle(void *array, const size_t el_size, const size_t array_size)
     for (int i = 0; i < array_size; ++i)
     {
         const int swap_idx = rand() % array_size;
-        swap(array + i * el_size, array + swap_idx * array_size, el_size);
+        swap(array + i * el_size, array + swap_idx * el_size, el_size);
     }
 }

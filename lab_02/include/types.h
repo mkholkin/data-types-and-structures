@@ -26,12 +26,12 @@ typedef union
 
 typedef struct
 {
-    const char *brand;
-    const char *country;
+    char brand[VARCHAR_LENGTH + 1];
+    char country[VARCHAR_LENGTH + 1];
     bool is_foreign;
     bool supports_maintain;
     unsigned long long price;
-    const char *color;
+    char color[VARCHAR_LENGTH + 1];
     bool is_new;
     car_spec spec;
 } car_t;
