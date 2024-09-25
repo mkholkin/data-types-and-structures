@@ -14,6 +14,11 @@
 #include "../include/utils/array_tools.h"
 #include "../include/utils/time.h"
 
+static double relating(const double a, const double b)
+{
+    return a / b * 100;
+}
+
 return_code process_add_car(car_t *cars, size_t *n)
 {
     if (*n == MAX_CARS
@@ -33,7 +38,10 @@ return_code process_remove_car(car_t *cars, size_t *n)
     {
         for (int i = 0; i < *n; ++i)
             if (cars[i].price == key)
+            {
                 target = cars + i;
+                break;
+            }
 
         if (target)
             arr_remove(cars, sizeof(car_t), n, target);
@@ -153,21 +161,25 @@ void process_show_stat(car_t *cars, const size_t n)
     end = nanoseconds_now();
     const nsec_t key_table_time_selectsort = end - beg;
 
-    printf("┌────────────────────────────┬────────────────────┬────────────────────┐\n"
-           "│                            │ Time (nanoseconds) │   Memory (bytes)   │\n"
-           "├────────────────────────────┼────────────────────┼────────────────────┤\n"
-           "│ Table (quick sort)         │ %18llu │ %18zu │\n"
-           "├────────────────────────────┼────────────────────┼────────────────────┤\n"
-           "│ Key-Table (quick sort)     │ %18llu │ %18zu │\n"
-           "├────────────────────────────┼────────────────────┼────────────────────┤\n"
-           "│ Table (selection sort)     │ %18llu │ %18zu │\n"
-           "├────────────────────────────┼────────────────────┼────────────────────┤\n"
-           "│ Key-Table (selection sort) │ %18llu │ %18zu │\n"
-           "└────────────────────────────┴────────────────────┴────────────────────┘\n",
-           table_time_qsort, sizeof(car_t) * n,
-           key_table_time_qsort, (sizeof(car_t) + sizeof(key_price)) * n,
-           table_time_selectsort, sizeof(car_t) * n,
-           key_table_time_selectsort, (sizeof(car_t) + sizeof(key_price)) * n);
+    const size_t key_mem = (sizeof(car_t) + sizeof(key_price)) * n;
+    const size_t table_mem = sizeof(car_t) * n;
+
+    printf("┌────────────────────────────┬──────────────────────┬────────────────────┐\n"
+           "│                            │  Time (nanoseconds)  │   Memory (bytes)   │\n"
+           "├────────────────────────────┼──────────────────────┼────────────────────┤\n"
+           "│ Table (quick sort)         │ %9llu (+%03.2lf%%) │ %18zu │\n"
+           "├────────────────────────────┼──────────────────────┼────────────────────┤\n"
+           "│ Key-Table (quick sort)     │ %20llu │ %9zu (+%03.2lf%%) │\n"
+           "├────────────────────────────┼──────────────────────┼────────────────────┤\n"
+           "│ Table (selection sort)     │ %8llu (+%03.2lf%%) │ %18zu │\n"
+           "├────────────────────────────┼──────────────────────┼────────────────────┤\n"
+           "│ Key-Table (selection sort) │ %9llu (+%03.2lf%%) │ %9zu (+%03.2lf%%) │\n"
+           "└────────────────────────────┴──────────────────────┴────────────────────┘\n",
+           table_time_qsort, relating(table_time_qsort, key_table_time_qsort) - 100, table_mem,
+           key_table_time_qsort, key_mem, relating(key_mem, table_mem) - 100,
+           table_time_selectsort, relating(table_time_selectsort, key_table_time_qsort) - 100, table_mem,
+           key_table_time_selectsort, relating(key_table_time_selectsort, key_table_time_qsort) - 100, key_mem, relating(key_mem, table_mem) - 100
+           );
 }
 
 void process_super_filter(const car_t *cars, const size_t n)
@@ -183,7 +195,9 @@ void process_super_filter(const car_t *cars, const size_t n)
 
     while (rc == OK)
     {
+        printf("Setting lower price bound\n");
         input_car_price(&low_price);
+        printf("Setting higher price bound\n");
         input_car_price(&high_price);
 
         if (high_price <= low_price)
@@ -191,6 +205,9 @@ void process_super_filter(const car_t *cars, const size_t n)
         else
             break;
     }
+
+    if (rc != OK)
+        return;
 
     for (int i = 0; i < n; i++)
         if (strcmp(cars[i].brand, key_brand) == 0 && cars[i].is_new == false && cars[i].spec.secondhand.owners_amount ==

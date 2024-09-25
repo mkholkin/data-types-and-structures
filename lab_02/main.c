@@ -11,7 +11,7 @@
 #define CHOISE_COMMANDS_MENU \
 "Chose command:\n"\
 "   [1] Add car\n"\
-"   [2] Remove car\n"\
+"   [2] Remove car by price\n"\
 "   [3] Show cars table\n"\
 "   [4] Show sorted cars table\n"\
 "   [5] Show key-table (price)\n"\
@@ -33,7 +33,7 @@ int main(void)
     car_t cars[MAX_CARS];
     size_t n;
 
-    process_load_cars(cars + 10, &n);
+    process_load_cars(cars, &n);
 
     return start_polling(cars, &n);
 }

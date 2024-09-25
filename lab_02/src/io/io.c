@@ -73,7 +73,7 @@ return_code input_option(const char **user_choice, const char **options, const s
             printf("    [%d] %s\n", i + 1, options[i]);
         printf("\n    [0] Exit\n");
 
-        rc = input_string("Выбор: ", user_input, MAX_USER_choice_LEN);
+        rc = input_string("Choice: ", user_input, MAX_USER_choice_LEN);
 
         if (rc == OK && strcmp(user_input, "0") == 0)
             rc = DIALOG_EXIT;
@@ -95,7 +95,7 @@ return_code input_user_choice(const char **user_choice, const char *exit_code, c
     *user_choice = NULL;
     char user_input[MAX_USER_CHOICE_LEN_WITH_NULL];
 
-    return_code rc = input_string("Выбор: ", user_input, MAX_USER_choice_LEN);
+    return_code rc = input_string("Choice: ", user_input, MAX_USER_choice_LEN);
 
     if (rc == OK && strcmp(user_input, exit_code) == 0)
         rc = DIALOG_EXIT;
