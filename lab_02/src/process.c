@@ -131,35 +131,48 @@ void process_show_stat(car_t *cars, const size_t n)
 
     const time_t seed = time(NULL);
 
-    srand(seed);
-    shuffle(cars, sizeof(car_t), n);
-    srand(seed);
-    shuffle(key_tbl, sizeof(key_price), n);
+    nsec_t table_time_qsort = 0;
+    nsec_t key_table_time_qsort = 0;
+    nsec_t table_time_selectsort = 0;
+    nsec_t key_table_time_selectsort = 0;
 
-    nsec_t beg = nanoseconds_now();
-    qsort_cars_by_price(cars, n);
-    nsec_t end = nanoseconds_now();
-    const nsec_t table_time_qsort = end - beg;
+    for (int i = 0; i < 10; i++)
+    {
+        srand(seed);
+        shuffle(cars, sizeof(car_t), n);
+        srand(seed);
+        shuffle(key_tbl, sizeof(key_price), n);
 
-    beg = nanoseconds_now();
-    key_tbl_qsort_cars_by_price(key_tbl, n);
-    end = nanoseconds_now();
-    const nsec_t key_table_time_qsort = end - beg;
+        nsec_t beg = nanoseconds_now();
+        qsort_cars_by_price(cars, n);
+        nsec_t end = nanoseconds_now();
+        table_time_qsort += end - beg;
 
-    srand(seed);
-    shuffle(cars, sizeof(car_t), n);
-    srand(seed);
-    shuffle(key_tbl, sizeof(key_price), n);
+        beg = nanoseconds_now();
+        key_tbl_qsort_cars_by_price(key_tbl, n);
+        end = nanoseconds_now();
+        key_table_time_qsort += end - beg;
 
-    beg = nanoseconds_now();
-    selectsort_cars_by_price(cars, n);
-    end = nanoseconds_now();
-    const nsec_t table_time_selectsort = end - beg;
+        srand(seed);
+        shuffle(cars, sizeof(car_t), n);
+        srand(seed);
+        shuffle(key_tbl, sizeof(key_price), n);
 
-    beg = nanoseconds_now();
-    key_tbl_selectsort_cars_by_price(key_tbl, n);
-    end = nanoseconds_now();
-    const nsec_t key_table_time_selectsort = end - beg;
+        beg = nanoseconds_now();
+        selectsort_cars_by_price(cars, n);
+        end = nanoseconds_now();
+        table_time_selectsort += end - beg;
+
+        beg = nanoseconds_now();
+        key_tbl_selectsort_cars_by_price(key_tbl, n);
+        end = nanoseconds_now();
+        key_table_time_selectsort += end - beg;
+    }
+
+    table_time_qsort /= 10;
+    key_table_time_qsort /= 10;
+    table_time_selectsort /= 10;
+    key_table_time_selectsort /= 10;
 
     const size_t key_mem = (sizeof(car_t) + sizeof(key_price)) * n;
     const size_t table_mem = sizeof(car_t) * n;

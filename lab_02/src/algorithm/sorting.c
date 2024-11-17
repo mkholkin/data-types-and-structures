@@ -27,7 +27,7 @@ static void selectsort(void *base, const size_t nmemb, const size_t size, int (*
     {
         size_t min_i = i;
         for (size_t j = i + 1; j < nmemb; j++)
-            if (cmp((char *) base + j * size, (char *)base + min_i * size) < 0)
+            if (cmp((char *) base + j * size, (char *) base + min_i * size) < 0)
                 min_i = j;
 
         if (min_i != i)

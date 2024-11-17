@@ -3,7 +3,7 @@
 
 #include <stddef.h>
 
-#define VARCHAR_LENGTH 255
+#define VARCHAR_LENGTH 30
 
 typedef struct
 {
