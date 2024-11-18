@@ -24,19 +24,19 @@
 "\n"\
 "   [0] Exit\n"
 
-return_code start_polling(tree_node_t *tree);
-return_code exec_command(tree_node_t *tree);
+return_code start_polling(tree_node_t **tree);
+return_code exec_command(tree_node_t **tree);
 
 int main(void)
 {
     FILE *stream = fopen(TREE_FILEPATH, "r");
     tree_node_t *tree = read_tree(stream);
     fclose(stream);
-    return start_polling(tree);
+    return start_polling(&tree);
 }
 
 
-return_code start_polling(tree_node_t *tree)
+return_code start_polling(tree_node_t **tree)
 {
     return_code rc;
 
@@ -49,7 +49,7 @@ return_code start_polling(tree_node_t *tree)
     return rc;
 }
 
-return_code exec_command(tree_node_t *tree)
+return_code exec_command(tree_node_t **tree)
 {
     return_code rc;
     char *user_choice = NULL;
@@ -66,40 +66,40 @@ return_code exec_command(tree_node_t *tree)
         switch (atoi(user_choice))
         {
         case 1:
-            process_show_tree(tree);
+            process_show_tree(*tree);
             break;
         case 2:
             process_tree_insert(tree);
             break;
         case 3:
-            process_tree_find(tree);
+            process_tree_find(*tree);
             break;
         case 4:
-            process_tree_remove(&tree);
+            process_tree_remove(tree);
             break;
         case 5:
-            process_count_nodes_in_each_level(tree);
+            process_count_nodes_in_each_level(*tree);
             break;
         case 6:
             process_file_insert();
             break;
         case 7:
-            process_insert_both(tree);
+            process_insert_both(*tree);
             break;
         case 8:
-            process_tree_pre_order(tree);
+            process_tree_pre_order(*tree);
             break;
         case 9:
-            process_tree_in_order(tree);
+            process_tree_in_order(*tree);
             break;
         case 10:
-            process_tree_post_order(tree);
+            process_tree_post_order(*tree);
             break;
         case 11:
-            process_show_stat1();
+            process_show_stat_insert();
             break;
         case 12:
-            process_show_stat2();
+            process_show_stat();
             break;
         default:
             assert(0);

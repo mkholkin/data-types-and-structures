@@ -16,7 +16,7 @@
 #define ANSI_COLOR_RESET   "\x1b[0m"
 
 void process_show_tree(tree_node_t *root);
-void process_tree_insert(tree_node_t *root);
+void process_tree_insert(tree_node_t **root);
 void process_tree_remove(tree_node_t **root);
 void process_tree_find(tree_node_t *root);
 void process_file_insert(void);
@@ -25,7 +25,7 @@ void process_tree_pre_order(tree_node_t *root);
 void process_tree_in_order(tree_node_t *root);
 void process_tree_post_order(tree_node_t *root);
 void process_count_nodes_in_each_level(tree_node_t *root);
-void process_show_stat1(void);
-void process_show_stat2(void);
+void process_show_stat_insert(void);
+void process_show_stat(void);
 
 #endif //COMMANDS_H

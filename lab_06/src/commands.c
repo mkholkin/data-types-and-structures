@@ -1,6 +1,7 @@
 #include "../include/commands.h"
 
 #include <assert.h>
+#include <math.h>
 #include <stdbool.h>
 #include <stdlib.h>
 
@@ -49,11 +50,11 @@ void process_show_tree(tree_node_t *root)
     print_2D(root);
 }
 
-void process_tree_insert(tree_node_t *root)
+void process_tree_insert(tree_node_t **root)
 {
     int num;
     input_int("Enter number: ", &num);
-    bin_tree_insert(&root, num);
+    bin_tree_insert(root, num);
 }
 
 void process_tree_remove(tree_node_t **root)
@@ -175,7 +176,7 @@ void process_count_nodes_in_each_level(tree_node_t *root)
     }
 }
 
-void process_show_stat1(void)
+void process_show_stat_insert(void)
 {
     srand(time(NULL));
     const char *file = "../stat.txt";
@@ -185,7 +186,7 @@ void process_show_stat1(void)
     printf(
         " Insertions   [BST] time total (ns)   [BST] time avg (ns)   [BST] comparisons avg    [File] time total (ns)   [File] time avg (ns) \n"\
         "------------ ----------------------- --------------------- ------------------------ ------------------------ ----------------------\n");
-    for (int limit = 10; limit <= 1000000; limit *= 10)
+    for (int limit = 10; limit <= 100000; limit *= 10)
     {
         fclose(fopen(file, "w"));
 
@@ -244,102 +245,116 @@ static tree_node_t *sortedArrayToBST(int arr[], int n)
     return sortedArrayToBSTRecur(arr, 0, n - 1);
 }
 
-void process_show_stat2(void)
+void process_show_stat(void)
 {
-    int limits[] = {10, 100, 500, 1000, 5000, 10000};
     nsec_t beg, end;
 
     printf(
-        "                           Left tree                |                Rigth tree              |               Balanced tree\n"
-        "           | -------------------------------------- | -------------------------------------- | --------------------------------------\n"\
-        " Elements  |  Depth    Find (ns)       Sort(ns)     |  Depth    Find (ns)       Sort(ns)     |  Depth    Find (ns)       Sort(ns)\n"\
-        "---------- | ------- -------------- --------------- | ------- -------------- --------------- | ------- -------------- ---------------\n"
+        "                 Degenerate tree                   |                 Unbalancded tree                  |                    Balanced tree\n"
+        " ------------------------------------------------- | ------------------------------------------------- | ------------------------------------------------- \n"\
+        "  Depth   Elements    Find (ns)       Sort(ns)     |  Depth   Elements    Find (ns)       Sort(ns)     |  Depth   Elements    Find (ns)       Sort(ns)     \n"\
+        " ------- ---------- -------------- --------------- | ------- ---------- -------------- --------------- | ------- ---------- -------------- --------------- \n"
     );
-    for (int p = 0; p < sizeof(limits) / sizeof(int); p++)
+    for (int depth = 1; depth <= 20; depth++)
     {
-        tree_node_t *right_tree = NULL;
-        double right_tree_find = 0;
-        double right_tree_sort = 0;
-        for (int i = 0; i < limits[p]; i++)
-        {
-            bin_tree_insert(&right_tree, i);
-        }
-
-        int right_tree_depth = maxDepth(right_tree);
-
-        for (int i = 0; i < limits[p]; i++)
-        {
-            beg = nanoseconds_now();
-            bin_tree_find(right_tree, i);
-            end = nanoseconds_now();
-            right_tree_find += end - beg;
-        }
-
-        beg = nanoseconds_now();
-        bin_tree_apply_in_order(right_tree, NULL, NULL);
-        end = nanoseconds_now();
-        right_tree_sort += end - beg;
-
-        bin_tree_destroy(right_tree);
-
         tree_node_t *left_tree = NULL;
         double left_tree_find = 0;
         double left_tree_sort = 0;
-        for (int i = limits[p] - 1; i >= 0; i--)
+        for (int i = depth - 1; i >= 0; i--)
         {
             bin_tree_insert(&left_tree, i);
         }
 
         int left_tree_depth = maxDepth(left_tree);
 
-        for (int i = 0; i < limits[p]; i++)
+        for (int _ = 0; _ < 100; _++)
+            for (int i = 0; i < depth; i++)
+            {
+                beg = nanoseconds_now();
+                bin_tree_find(left_tree, i);
+                end = nanoseconds_now();
+                left_tree_find += (end - beg) / 100.;
+            }
+        for (int i = 0; i < 100; i++)
         {
             beg = nanoseconds_now();
-            bin_tree_find(left_tree, i);
+            bin_tree_apply_in_order(left_tree, NULL, NULL);
             end = nanoseconds_now();
-            left_tree_find += end - beg;
+            left_tree_sort += end - beg;
         }
-
-        beg = nanoseconds_now();
-        bin_tree_apply_in_order(left_tree, NULL, NULL);
-        end = nanoseconds_now();
-        left_tree_sort += end - beg;
 
         bin_tree_destroy(left_tree);
 
 
-        int items[limits[p]];
-        for (int i = 0; i < limits[p]; i++)
+        tree_node_t *right_tree = NULL;
+        double right_tree_find = 0;
+        double right_tree_sort = 0;
+        int k = depth * 2 - 1;
+
+        bin_tree_insert(&right_tree, 0);
+        for (int i = 1; i < depth; i++)
+        {
+            bin_tree_insert(&right_tree, i);
+            bin_tree_insert(&right_tree, -i);
+        }
+
+        int right_tree_depth = maxDepth(right_tree);
+
+        for (int _ = 0; _ < 100; _++)
+            for (int i = -depth + 1; i < depth; i++)
+            {
+                beg = nanoseconds_now();
+                bin_tree_find(right_tree, i);
+                end = nanoseconds_now();
+                right_tree_find += (end - beg) / 100.;
+            }
+        for (int i = 0; i < 100; i++)
+        {
+            beg = nanoseconds_now();
+            bin_tree_apply_in_order(right_tree, NULL, NULL);
+            end = nanoseconds_now();
+            right_tree_sort += end - beg;
+        }
+
+        bin_tree_destroy(right_tree);
+
+
+        unsigned long long n = pow(2, depth) - 1;
+        int *items = malloc(sizeof(int) * n);
+        for (int i = 0; i < pow(2, depth); i++)
         {
             items[i] = i;
         }
 
-        tree_node_t *balanced_tree = sortedArrayToBST(items, limits[p]);
+        tree_node_t *balanced_tree = sortedArrayToBST(items, n);
+        free(items);
+
         int balanced_tree_depth = maxDepth(balanced_tree);
         double balanced_tree_find = 0;
         double balanced_tree_sort = 0;
 
-        for (int i = 0; i < limits[p]; i++)
+        for (unsigned long long i = 0; i < n; i++)
         {
             beg = nanoseconds_now();
             bin_tree_find(balanced_tree, i);
             end = nanoseconds_now();
             balanced_tree_find += end - beg;
         }
-
-        beg = nanoseconds_now();
-        bin_tree_apply_in_order(balanced_tree, NULL, NULL);
-        end = nanoseconds_now();
-        balanced_tree_sort += end - beg;
+        for (int i = 0; i < 100; i++)
+        {
+            beg = nanoseconds_now();
+            bin_tree_apply_in_order(balanced_tree, NULL, NULL);
+            end = nanoseconds_now();
+            balanced_tree_sort += end - beg;
+        }
 
         bin_tree_destroy(balanced_tree);
 
         printf(
-            "%10d | %7d %14lf %15lf | %7d %14lf %15lf | %7d %14lf %15lf\n",
-            limits[p],
-            left_tree_depth, left_tree_find / limits[p], left_tree_sort / limits[p],
-            right_tree_depth, right_tree_find / limits[p], right_tree_sort / limits[p],
-            balanced_tree_depth, balanced_tree_find / limits[p], balanced_tree_sort / limits[p]
+            " %7d %10d %14lf %15lf | %7d %10d %14lf %15lf | %7d %10lld %14lf %15lf\n",
+            left_tree_depth, depth, left_tree_find / depth, left_tree_sort / 100,
+            right_tree_depth, k, right_tree_find / k, right_tree_sort / 100,
+            balanced_tree_depth, n, balanced_tree_find / n, balanced_tree_sort / 100
         );
     }
 }
